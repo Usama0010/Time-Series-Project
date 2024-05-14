@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Series Forecasting</title>
+</head>
+<body>
+    <h1>Time Series Forecasting</h1>
+
+    <form id="model-selection">
+        <label for="model">Select Model:</label>
+        <select id="model" name="model">
+            <option value="ARIMA">ARIMA</option>
+            <option value="ANN">ANN</option>
+            <option value="SARIMA">SARIMA</option>
+            <option value="ETS">ETS</option>
+            <option value="LSTM">LSTM</option>
+            <option value="Hybrid">Hybrid</option>
+        </select>
+        <button type="submit">Forecast</button>
+    </form>
+
+    <div id="forecast-plot">
+        <!-- Forecast plot will be displayed here -->
+    </div>
+
+    <script>
+        document.getElementById('model-selection').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('/forecast', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var plotImg = document.createElement('img');
+                plotImg.src = 'data:image/png;base64,' + data.plot;
+                document.getElementById('forecast-plot').innerHTML = '';
+                document.getElementById('forecast-plot').appendChild(plotImg);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
